@@ -1,0 +1,141 @@
+@startuml
+
+class TextEditorModel {
+  -text: str
+  -filename: str
+  -is_modified: bool
+
+  +load(filename)
+  +save(filename)
+  +set_text(text)
+  +get_text()
+  +set_filename(filename)
+  +get_filename()
+  +set_modified(is_modified)
+  +get_modified()
+}
+
+class TextEditorWindow {
+  -_root_frame: Any
+
+  +__init__(title: str)
+  +show()
+  +hide()
+  +set_size(width: int, height: int)
+  +get_size() -> (int, int)
+}
+
+class TextArea {
+  -_text: str
+
+  +__init__(parent: TextEditorWindow)
+  +set_text(text: str)
+  +get_text() -> str
+  +insert_text(index: int, text: str)
+  +delete_text(index: int, count: int)
+  +select_text(start: int, end: int)
+  +get_selected_text() -> str
+}
+
+class MenuItem {
+  -_label: str
+  -_command: Callable[[], None]
+
+  +__init__(label: str, command: Callable[[], None])
+  +get_label() -> str
+  +get_command() -> Callable[[], None]
+}
+
+class ToolBarButton {
+  -_label: str
+  -_command: Callable[[], None]
+
+  +__init__(label: str, command: Callable[[], None])
+  +get_label() -> str
+  +get_command() -> Callable[[], None]
+}
+
+class StatusBar {
+  -_label: str
+
+  +__init__(parent: TextEditorWindow)
+  +set_text(text: str)
+  +get_text() -> str
+}
+
+class SearchEntry {
+  -_text: str
+  -_on_search: Callable[[], None]
+
+  +__init__(parent: TextEditorWindow, on_search: Callable[[], None])
+  +set_text(text: str)
+  +get_text() -> str
+  +get_on_search() -> Callable[[], None]
+}
+
+class ReplaceEntry {
+  -_text: str
+  -_on_replace: Callable[[], None]
+
+  +__init__(parent: TextEditorWindow, on_replace: Callable[[], None])
+  +set_text(text: str)
+  +get_text() -> str
+  +get_on_replace() -> Callable[[], None]
+}
+
+class TextEditorView {
+  -_window: TextEditorWindow
+  -_text_area: TextArea
+  -_menu_bar: List[MenuItem]
+  -_tool_bar: List[ToolBarButton]
+  -_status_bar: StatusBar
+  -_search_entry: SearchEntry
+  -_replace_entry: ReplaceEntry
+  -_search_button: ToolBarButton
+  -_replace_button: ToolBarButton
+
+  +create_window()
+  +create_text_area()
+  +create_menu_bar()
+  +create_tool_bar()
+  +create_status_bar()
+  +create_search_box()
+  +create_replace_box()
+  +update_view()
+  +on_search(event)
+  +on_replace(event)
+}
+
+class TextEditorController {
+  -_model: TextEditorModel
+  -_view: TextEditorView
+
+  +__init__(model: TextEditorModel, view: TextEditorView)
+  +open_file()
+  +save_file()
+  +save_file_as()
+  +cut()
+  +copy()
+  +paste()
+  +undo()
+  +redo()
+  +handle_key_press(event)
+  +search(text: str)
+  +replace(text: str, replacement: str)
+  +on_search_click()
+  +on_replace_click()
+}
+
+TextEditorController "1" -- "1" TextEditorModel
+TextEditorController "1" -- "1" TextEditorView
+TextEditorView "1" -- "1" TextEditorWindow
+TextEditorView "1" -- "1" TextArea
+TextEditorView "1" -- "*" MenuItem
+TextEditorView "1" -- "*" ToolBarButton
+TextEditorView "1" -- "1" StatusBar
+TextEditorView "1" -- "1" SearchEntry
+TextEditorView "1" -- "1" ReplaceEntry
+TextEditorView "1" -- "1" ToolBarButton
+
+@enduml
+
