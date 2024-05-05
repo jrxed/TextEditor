@@ -1,12 +1,11 @@
 import json
 import webbrowser
 
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
+
 from .model import *
 from .view import *
-
-PATH_TO_SAVE_OPENED_FILES = "cache/opened.json"
-PATH_TO_SAVE_APP_DATA = "cache/data.json"
-DOCUMENTATION_LINK = "https://github.com/jrxed/TextEditor/blob/main/README.md"
+from .constants import PATH_TO_SAVE_APP_DATA, PATH_TO_SAVE_OPENED_FILES, DOCUMENTATION_LINK
 
 
 class TextEditorController:
