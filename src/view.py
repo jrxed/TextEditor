@@ -1,4 +1,5 @@
 import sys
+
 from .grip import *
 from .menu import *
 from .search import *

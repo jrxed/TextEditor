@@ -1,5 +1,5 @@
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QFont, QTextCursor, QSyntaxHighlighter, QTextCharFormat, QColor
+from PyQt5.QtWidgets import QFrame, QTextEdit
 
 
 class TextArea(QTextEdit):

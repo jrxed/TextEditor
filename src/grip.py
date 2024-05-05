@@ -1,6 +1,7 @@
 import abc
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFrame, QApplication
 
 
 class CommonGrip(QFrame):

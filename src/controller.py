@@ -1,8 +1,8 @@
+import json
+import webbrowser
+
 from .model import *
 from .view import *
-import json
-import os
-import webbrowser
 
 PATH_TO_SAVE_OPENED_FILES = "cache/opened.json"
 PATH_TO_SAVE_APP_DATA = "cache/data.json"

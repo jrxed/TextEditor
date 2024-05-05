@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtGui import QCursor, QKeySequence
+from PyQt5.QtWidgets import QMenuBar, QHBoxLayout, QMenu, QLabel, QAction, QShortcut
 
 
 class MenuBar(QMenuBar):
