@@ -1,5 +1,7 @@
 import sys
 
+from PyQt5.QtWidgets import QWidget, QMainWindow
+
 from .grip import *
 from .menu import *
 from .search import *
