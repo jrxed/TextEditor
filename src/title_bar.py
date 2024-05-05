@@ -106,10 +106,10 @@ class TitleBar(QFrame):
         '''
         if self.master.isMaximized():
             self.master.showNormal()
-            self.maximize_button.setIcon(QIcon("../image/to full-screen.png"))
+            self.maximize_button.setIcon(QIcon("image/to full-screen.png"))
         else:
             self.master.showMaximized()
-            self.maximize_button.setIcon(QIcon("../image/from full-screen.png"))
+            self.maximize_button.setIcon(QIcon("image/from full-screen.png"))
 
 class TitleLabel(QLabel):
     '''
