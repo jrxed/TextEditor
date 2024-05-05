@@ -20,6 +20,8 @@ class TextEditorModel:
         '''
         Закрытие активного файла
         '''
+        if self.current_state.get_is_modified():
+            self.count_unsaved -= 1
         self.states.remove(self.current_state)
 
     def load(self, filename, slider_pos=0, cursor_pos=0):

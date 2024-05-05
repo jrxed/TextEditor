@@ -1,6 +1,7 @@
 from PyQt5.QtGui import QFont, QTextCursor, QSyntaxHighlighter, QTextCharFormat, QColor
 from PyQt5.QtWidgets import QFrame, QTextEdit
 
+from .constants import PYTHON_KEYWORDS, PYTHON_FUNCTIONS
 
 class TextArea(QTextEdit):
     '''
@@ -16,7 +17,6 @@ class TextArea(QTextEdit):
 
         self._text = ""
         self.controller = controller
-        self.highlighter = PythonHighlighter(self.document())
 
         self.cursorPositionChanged.connect(
             lambda: self.controller.update_cursor_pos(self.textCursor().position(),
@@ -25,6 +25,13 @@ class TextArea(QTextEdit):
         self.textChanged.connect(lambda: self.controller.update_text(self.get_text()))
         self.verticalScrollBar().valueChanged.connect(
             lambda: self.controller.update_slider_pos(self.get_vertical_slider_pos()))
+
+    def set_highlighter(self, filename):
+        extension = filename.split('.')[-1]
+        if extension == "py":
+            self.highlighter = PythonHighlighter(self.document())
+        else:
+            self.highlighter = DefaultHighlighter(self.document())
 
     def scroll_to_index(self, index, length):
         '''
@@ -77,6 +84,58 @@ class TextArea(QTextEdit):
         self.setTextCursor(cursor)
 
 
+class DefaultHighlighter(QSyntaxHighlighter):
+    '''
+    Дефолтная подсветка
+    '''
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def highlightBlock(self, text):
+        '''
+        Подсветка одной строки
+        '''
+        block_text = self.currentBlock().text() + ' '
+
+        fmt = QTextCharFormat()
+        fmt.setBackground(QColor("#222"))
+        fmt.setForeground(QColor("#FFF"))
+        self.setFormat(0, len(block_text), fmt)
+
+        start = 0
+        word = ""
+        open_quotes = False
+        last_quote = ""
+
+        for index, char in enumerate(block_text):
+            if char in ("'", '"'):
+                if not open_quotes:
+                    start = index
+                    last_quote = char
+                    open_quotes = True
+
+                elif char == last_quote:
+                    fmt.setForeground(QColor("green").lighter(120))
+                    self.setFormat(start, index - start + 1, fmt)
+                    open_quotes = False
+
+            elif char.isalpha() or char.isdigit() or char == '_':
+                word += char
+            else:
+                if word.isdigit():
+                    fmt.setForeground(QColor("cyan"))
+                else:
+                    word = ''
+                    continue
+
+                self.setFormat(index - len(word), len(word), fmt)
+                word = ''
+        else:
+            if open_quotes:
+                fmt.setForeground(QColor("green").lighter(120))
+                self.setFormat(start, len(block_text) - start, fmt)
+
+
 class PythonHighlighter(QSyntaxHighlighter):
     '''
     Подсветка синтаксиса Python
@@ -85,24 +144,8 @@ class PythonHighlighter(QSyntaxHighlighter):
     def __init__(self, parent=None):
         super(PythonHighlighter, self).__init__(parent)
 
-        self.keywords = ["False",     "await",      "else",       "import",   "pass",
-                         "None",      "break",      "except",     "in",       "raise",
-                         "True",      "class",      "finally",    "is",       "return",
-                         "and",       "continue",   "for",        "lambda",   "try",
-                         "as",        "def",        "from",       "nonlocal", "while",
-                         "assert",    "del",        "global",     "not",      "with",
-                         "async",     "elif",       "if",         "or",       "yield"]
-
-        self.functions = ["abs",      "aiter",      "all",        "anext",    "any",      "ascii",     "bin",
-                          "bool",     "breakpoint", "bytearray",  "bytes",    "callable", "chr",       "classmethod",
-                          "compile",  "complex",    "delattr",    "dict",     "dir",      "divmod",    "enumerate",
-                          "eval",     "exec",       "filter",     "float",    "format",   "frozenset", "getattr",
-                          "globals",  "hasattr",    "hash",       "help",     "hex",      "id",        "input",
-                          "int",      "isinstance", "issubclass", "iter",     "len",      "list",      "locals",
-                          "map",      "max",        "memoryview", "min",      "next",     "object",    "oct",
-                          "open",     "ord",        "pow",        "print",    "property", "range",     "repr",
-                          "reversed", "round",      "set",        "setattr",  "slice",    "sorted",    "staticmethod",
-                          "str",      "sum",        "super",      "tuple",    "type",     "vars",      "zip"]
+        self.keywords = PYTHON_KEYWORDS
+        self.functions = PYTHON_FUNCTIONS
 
     def highlightBlock(self, text):
         '''

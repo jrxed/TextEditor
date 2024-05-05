@@ -89,6 +89,7 @@ class TextEditorView:
         self._text_area.set_text(text)
         self._text_area.set_cursor_pos(cursor_pos)
         self._text_area.set_vertical_slider_pos(slider_pos)
+        self._text_area.set_highlighter(self._tab_bar.tabText(index))
         self._text_area.setFocus()
 
     def get_tab_index(self):

@@ -102,7 +102,6 @@ class TextEditorController:
         Сохранение активного файла
         '''
         if self._model.current_state:
-            print(self._model.get_is_filename_actual())
             if not self._model.get_filename() or not self._model.get_is_filename_actual():
                 self.save_file_as()
             else:
@@ -166,7 +165,7 @@ class TextEditorController:
             save_before_close = QMessageBox.question(None, 'Save file',
                 "Do you want to save the file before closing?", QMessageBox.Yes | QMessageBox.No)
 
-            if save_before_close:
+            if save_before_close == QMessageBox.Yes:
                 self.save_file()
 
         index = self._view.get_tab_index()
